@@ -11,7 +11,7 @@ rep('<span class="mark">✳</span> Healthy Places</div><span class="tag">Evidenc
 topbar=h[h.index('<header class="top">'):h.index('</header>')+9]
 rep('<div class="mini-legend" aria-label="Legend">','<div class="card-legend" aria-label="Legend" style="display:flex;flex-wrap:wrap;gap:8px 17px;border-top:1px solid #edf1ed;margin-top:17px;padding-top:15px;font-size:12px;color:#111"><b>How to read the cards</b><span><b>Problem evidence</b> = studies linking the exposure the action reduces to health</span><span><b>Fix evidence</b> = studies testing the action itself</span><span><b>Strong</b> = 20+ problem studies (or 5+ fix trials) and most significant · <b>Moderate</b> = 5+ studies, ≥40% significant · <b>Limited</b> = fewer · associations, not proof of cause</span></div><div hidden class="old-legend">')
 rep('<div class="sim"><b>Illustrative design only.</b> All line colours and weights below are invented examples, not assessed findings or priorities. No evidence has been ranked in this mockup.</div>',
-    '<div class="sim"><b>Real data.</b> Evidence strength is graded from the curated System Public Graph v2.1: number of studies, share with a statistically significant result, and trials. It rates the evidence base, not the size of the effect.</div>')
+    '')
 rep('<section class="pack" id="package">','<section class="pack" id="package" hidden style="display:none">')
 rep('<button class="btn" id="review" type="button">Review package · 0 ↓</button>','<span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="review" type="button" disabled>Review package · 0 ↗</button><button class="btn" id="clear2" type="button">Clear</button></span>')
 rep("document.getElementById('review').textContent=`Review package · ${states.selected.size} ↓`;","document.getElementById('review').textContent=`Review package · ${states.selected.size} ↗`;document.getElementById('review').disabled=states.selected.size<1;")
@@ -36,7 +36,14 @@ rep('aria-haspopup="dialog" disabled>Open joint systems map ↗</button>','disab
 rep("document.getElementById('open-package').disabled=states.selected.size<2;","document.getElementById('open-package').disabled=states.selected.size<1;")
 rep('<p class="foot">Concept only · Not connected to the System Public Graph or external datasets · No intervention outcomes or combined effects have been assessed.</p>',
     '<p class="foot">Built on the System Public Graph v2.1 and cited reports. No combined effects of packages have been assessed.</p>')
-rep('</div></div></main><div id="announcement"','</div></div>'+open('graph_section.html').read().replace('03 / Evidence graph · real data','02 / Overview · all actions')+'</main><div id="announcement"')
+def homesec():
+    s=open('graph_section.html').read().replace('03 / Evidence graph · real data','02 / Overview · all actions')
+    i=s.index('<div class="gctl">'); j=s.index('<div id="gpick"')
+    block=s[i:j]; assert block.endswith('</div></div>\n')
+    segs=block[len('<div class="gctl">'):-len('</div></div>\n')]
+    row='<div class="gctl" style="justify-content:space-between;width:100%;margin:12px 0 14px">'+segs+'</div>\n'
+    return s[:i]+'</div>\n'+row+s[j:]
+rep('</div></div></main><div id="announcement"','</div></div>'+homesec()+'</main><div id="announcement"')
 pre='''<script>window.HP_DATA='''+data+''';
 (function(){var D=window.HP_DATA.interventions;
 window.HP_expLabel=function(i){return D[i]?'REDUCES '+D[i].exposure.toUpperCase():'';};
@@ -51,7 +58,7 @@ window.HP_cardBars=function(i,setting){var it=D[i];if(!it)return "";var key=(set
    '<div class="cb-l">'+n+' '+lbl.toLowerCase()+' stud'+(n===1?'y':'ies')+(all?'':' in '+key+' settings <span class="cb-of">(of '+s.studies+')</span>')+'</div><div class="cb-l2">'+(all?sig(s):'significance shown under All settings')+'</div>'+(sub2||'')+'</div>';}
  var p=it.strength.p,f=it.strength.f,pn=all?p.studies:(it.settings[key]||0),fn=all?f.studies:(it.int_settings[key]||0);
  var tr=f.trials?f.trials+' trial'+(f.trials===1?'':'s'):'no trials';
- var out=(it.notes&&it.notes.length)?'<div class="cb-x">+ outside review or trial</div>':'';
+ var out='';
  return '<div class="cardbars">'+block('Problem',p,pn,mxP,'#36c9ff','#a6e6ff','')+block('Fix',f,fn,mxF,'#111','#9a9a9a','<div class="cb-l2">'+tr+'</div>'+out)+'</div>';};
 })();</script>
 '''

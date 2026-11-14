@@ -40,20 +40,22 @@ body:has(dialog[open]){overflow:hidden}.matrix-wrap{scroll-margin-top:150px}.ins
 .gn.cob .gs2,.gn.int .gx{margin-top:auto}.gn.hl .gs2{margin-top:auto}
 
 .gn.int.sel .seg[style*='#eee']{background:#fff!important}
+
+.ginspect{max-height:none!important;overflow:visible!important;height:auto}
 .back{display:inline-block;margin:18px 0 0;font-weight:800;color:#111}.pkgnote{background:#fff8d2;border:1px solid #c8ba55;padding:10px 13px;font-size:13px;margin-top:12px}</style></head><body>
 <header class="top"><div class="shell"><div class="brand"><span class="mark">✳</span> Airways for Impact</div><span class="tag">Evidence pathways · System Public Graph data</span></div></header>
-<main class="shell main"><a class="back" href="index.html">← All actions</a>
+<main class="shell main"><a class="back" href="index.html">← All interventions</a>
 <div id="pkg"></div>
 <section class="panel" id="graph" aria-labelledby="graph-title" style="margin-top:16px">
-<div class="panelhead"><div><div class="eyebrow">03 / Evidence graph · real data</div><h2 id="graph-title">How much evidence sits behind each link?</h2><p>Pick an action. Lines run to its wider outcomes (above) and to health (below); line width is the number of studies. Select any line to see the findings.</p></div>
+<div class="panelhead"><div><div class="eyebrow">03 / Evidence graph · real data</div><h2 id="graph-title">How much evidence sits behind each link?</h2><p>Pick an intervention. Lines run to its co-benefits and costs (above) and to health (below); line width is the number of studies. Select any line to see the findings.</p></div>
 <div class="gctl"><div class="seg" role="group" aria-label="Layout"><button type="button" data-layout="rows" aria-pressed="true">Rows</button><button type="button" data-layout="cols" aria-pressed="false">Columns</button></div>
 <div class="seg" role="group" aria-label="Evidence from"><button type="button" data-region="all" aria-pressed="true">All regions</button><button type="button" data-region="uk" aria-pressed="false">UK only</button></div></div></div>
-<div id="gpick" class="gpick" role="group" aria-label="Choose an action"></div>
+<div id="gpick" class="gpick" role="group" aria-label="Choose an intervention"></div>
+<div class="glegend" style="border-top:0;margin-top:4px;padding-top:0;margin-bottom:12px"><b>Line colour</b><span class="leg"><i class="gl" style="border-color:#36c9ff"></i> Health link (studies)</span><span class="leg"><i class="gl" style="border-color:#57ef8a"></i> Possible benefit</span><span class="leg"><i class="gl" style="border-color:#ff9c36;border-top-style:dashed"></i> Mixed / conditional</span><span class="leg"><i class="gl" style="border-color:#ff43bd;border-top-style:dotted"></i> Potential harm / makes worse</span><span class="leg"><i class="gl" style="border-color:#bcbcbc;border-top-style:dashed"></i> Not assessed</span>
+<span class="weight"><b>Evidence volume:</b> W1 = 1–4 · W2 = 5–19 · W3 = 20+ studies · width is linear in studies, not effect size</span>
+<span class="weight"><b>Bars:</b> blue = problem evidence (studies linking the exposure to health) · black = fix evidence (studies testing the intervention)</span></div>
 <div class="gwrap"><div class="gscroll"><svg id="gsvg" role="group" aria-label="Evidence graph"></svg></div>
 <aside class="ginspect" aria-live="polite"><div class="eyebrow">Inspect a link</div><div id="ginspect"></div></aside></div>
-<div class="glegend"><b>Line colour</b><span class="leg"><i class="gl" style="border-color:#36c9ff"></i> Health link (studies)</span><span class="leg"><i class="gl" style="border-color:#57ef8a"></i> Possible benefit</span><span class="leg"><i class="gl" style="border-color:#ff9c36;border-top-style:dashed"></i> Mixed / conditional</span><span class="leg"><i class="gl" style="border-color:#ff43bd;border-top-style:dotted"></i> Potential harm / makes worse</span><span class="leg"><i class="gl" style="border-color:#bcbcbc;border-top-style:dashed"></i> Not assessed</span>
-<span class="weight"><b>Evidence volume:</b> W1 = 1–4 · W2 = 5–19 · W3 = 20+ studies · width is linear in studies, not effect size</span>
-<span class="weight"><b>Bars:</b> blue = problem evidence (studies linking the exposure to health) · black = fix evidence (studies testing the action)</span></div>
 <p class="foot" id="gfoot"></p>
 </section>
 <p class="foot">Built on the System Public Graph v2.1 and cited reports.</p></main>
@@ -62,8 +64,8 @@ body:has(dialog[open]){overflow:hidden}.matrix-wrap{scroll-margin-top:150px}.ins
 var t=document.getElementById('graph-title'),n=a.map(function(i){return D[i].name});
 if(a.length===1){t.textContent=n[0];document.title=n[0]+' — Airways for Impact';}
 else if(a.length>1){t.textContent='Package: '+n.join(' + ');document.title='Package — Airways for Impact';
- document.getElementById('pkg').innerHTML='<div class="pkgnote"><b>Package view.</b> Each line is evidence for one action. Combined effects and interactions have not been assessed; counts cannot be added to estimate a joint effect.</div>';}
-document.querySelector('#graph .eyebrow').textContent=a.length>1?'Package evidence graph · real data':'Action evidence graph · real data';})();</script>
+ document.getElementById('pkg').innerHTML='<div class="pkgnote"><b>Package view.</b> Each line is evidence for one intervention. Combined effects and interactions have not been assessed; counts cannot be added to estimate a joint effect.</div>';}
+document.querySelector('#graph .eyebrow').textContent=a.length>1?'Package evidence graph · real data':'Intervention evidence graph · real data';})();</script>
 <script>(function(){
 const D=window.HP_DATA, INTS=D.interventions, CR=D.crowding, HL=D.health, CB=D.cob;
 const COL={benefit:'#57ef8a',mixed:'#ff9c36',harm:'#ff43bd',unknown:'#bcbcbc',health:'#36c9ff'};
@@ -113,19 +115,19 @@ function draw(){
   VIS.forEach(i=>INTS[i].cob.forEach((c,ci)=>{const s=isSel(i),a=top(P.int[i]),b=cobEnd(P.cob[c.g]);E+=curve(a[0],a[1],b[0],b[1],COL[c.type],s?1:.12,c.w==='W2'?4.5:2.5,DASH[c.type],rows,s?`cob:${i}:${c.g}:${ci}`:null);}));
   slots.forEach(i=>{const it=ITEM(i);HL.forEach((h,k)=>{const e=edgeP(it,h.key),v=e.studies;if(!v)return;const s=isSel(i)||(ONLY.length>1&&i===8);
     const a=bot(P.int[i]),b=hlEnd(P.hl[k]),c=cons(e.pct_sig);E+=curve(a[0],a[1],b[0],b[1],i===8?COL.harm:COL.health,s?1:.1,lw(v),c[0],rows,s?`hl:${i}:${k}`:null);
-    if(i===st.sel)B+=badge(a[0]+(b[0]-a[0])*.6,a[1]+(b[1]-a[1])*.6,e.pct_sig!=null&&v>=5?`${v} · ${e.pct_sig}% sig`:`${v}`);});});
+});});
   if(SHOWCR)CR.worsens.forEach(key=>{const t=INTS.findIndex(x=>x.key===key);if(!slots.includes(t))return;const a=P.int[8],b=P.int[t];
     E+=rows?`<path d="M${a.x+a.w/2} ${a.y} C${a.x+a.w/2} ${a.y-70} ${b.x+b.w/2} ${b.y-70} ${b.x+b.w/2} ${b.y}" fill="none" stroke="#ff43bd" stroke-width="2.5" stroke-dasharray="2 5"/>`:`<path d="M${a.x} ${a.y+30} C${a.x-46} ${a.y+30} ${b.x-46} ${b.y+30} ${b.x} ${b.y+30}" fill="none" stroke="#ff43bd" stroke-width="2.5" stroke-dasharray="2 5"/>`;});
-  CB.forEach((g,j)=>{const p=P.cob[j],hit=have.has(j);N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(g.name)}</div><div class="gs">${g.n} of 8 actions have evidence</div><div class="gs2">${hit?'Evidence for the selected action':'Not assessed for the selected action'}</div>`,'cob'+(hit?' on':''));});
+  CB.forEach((g,j)=>{const p=P.cob[j],hit=have.has(j);N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(g.name)}</div><div class="gs">${g.n} of 8 interventions have evidence</div><div class="gs2">${hit?'Evidence for the selected intervention':'Not assessed for the selected intervention'}</div>`,'cob'+(hit?' on':''));});
   slots.forEach(i=>{const it=ITEM(i),p=P.int[i],s=isSel(i),cr=i===8;
     const pS=uk()?{studies:it.exp_uk,pct_sig:null,level:P_(it).level}:P_(it), fS=uk()?{studies:it.direct_uk,pct_sig:null,level:F_(it).level}:F_(it);
     const body=`<div class="gt">${esc(it.name)}</div><div class="gs">${cr?'exposure only · makes damp &amp; stale air worse':'reduces '+esc(it.exposure)}</div>`+
       meter('Problem',pS,cr?'#ff43bd':'#36c9ff')+qbar(pS,maxP,cr?'#ff43bd':'#36c9ff',cr?'#ffb3e3':'#a6e6ff','problem')+
-      (cr?'':meter('Fix',fS,'#111')+qbar(fS,maxF,'#111','#9a9a9a','fix')+((it.notes&&it.notes.length)?`<div class="gx">+ outside review or trial</div>`:''));
+      (cr?'':meter('Fix',fS,'#111')+qbar(fS,maxF,'#111','#9a9a9a','fix'));
     N+=fo(p.x,p.y,p.w,p.h,body,'int'+(s?' sel':'')+(cr?' cr':''),cr?'':`data-kind="int" data-i="${i}" tabindex="0" role="button" aria-label="${esc(it.name)}"`);});
   HL.forEach((h,k)=>{const p=P.hl[k],v=hv(k);let e;if(fk.length===1)e=edgeP(sel,h.key);else{const sg=fk.reduce((a,i)=>{const x=edgeP(INTS[i],h.key);return a+(x.pct_sig!=null?Math.round((x.studies||0)*x.pct_sig/100):0);},0);e={studies:v,pct_sig:uk()||!v?null:Math.round(sg/v*100)};}const f=fk.reduce((a,i)=>a+(edgeF(INTS[i],h.key).studies||0),0);
     N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(h.name)}</div>`+(v?qbar(e,maxHv,'#36c9ff','#a6e6ff','problem'):'<div class="gs">No study found</div>')+`<div class="gs2">${f} fix ${f===1?'study':'studies'}</div>`,'hl'+(v?' on':''));});
-  const hd=rows?[[0,18,'WIDER OUTCOMES'],[0,316,'ACTIONS · and the exposure each reduces'],[0,P.hl[0].y-14,'HEALTH · line width = studies · line style = consistency']]:[[0,26,'WIDER OUTCOMES'],[500,26,'ACTIONS'],[1070,26,'HEALTH']];
+  const hd=rows?[[0,18,'CO-BENEFITS & COST'],[0,P.int[slots[0]].y-14,'INTERVENTIONS'],[0,P.hl[0].y-14,'HEALTH']]:[[0,26,'CO-BENEFITS & COST'],[500,26,'INTERVENTIONS'],[1070,26,'HEALTH']];
   const svg=document.getElementById('gsvg');svg.classList.toggle('multi',n>1);svg.setAttribute('viewBox',`-6 -6 ${W+12} ${Hh+12}`);svg.style.minWidth=Math.min(W,1000)+'px';
   svg.innerHTML=E+N+B+hd.map(h=>`<text x="${h[0]}" y="${h[1]}" font-size="13" font-weight="800" letter-spacing="1" fill="#111" stroke="#fff" stroke-width="5" paint-order="stroke" stroke-linejoin="round">${h[2]}</text>`).join('');
   document.querySelectorAll('#gpick button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.pick===st.sel)));
@@ -146,13 +148,13 @@ function inspect(id){
     row('Problem evidence',`${e.studies} studies link ${esc(it.exposure)} to ${esc(h.name.toLowerCase())}${uk()?' (UK only)':''}<br>${sigtxt(e)}${e.trials?` · ${e.trials} trial${e.trials>1?'s':''}`:''}`)+
     (uk()?'':row('Consistency',{consistent:'Consistent: 60%+ of studies significant',mixed:'Mixed: 40–59% significant','mostly null':'Mostly null: under 40% significant',untestable:'No CI or p-value to test'}[c]))+
     (uk()?'':row('Finding types',`${e.effect_size||0} effect-size findings (odds, risk or hazard ratios, correlations)<br>${e.group_comparison||0} group comparisons`))+
-    (+p[1]===8?'':row('Fix evidence',`${f.studies||0} studies test the action on this outcome${(f.studies||0)?'<br>'+sigtxt(f):' — <span style="color:#b3006b;font-weight:700">gap: never tested directly</span>'}`))+
-    row('What this means','An expected benefit via the exposure, not a measured effect of the action. Findings are associations, not causal estimates.')+
-    row('How these were made','LLM-extracted from peer-reviewed papers (PubMed, Europe PMC, OpenAlex), values checked against the source text. Matched to this action by our keyword rules rather than System’s biomedical concept labels.')+
+    (+p[1]===8?'':row('Fix evidence',`${f.studies||0} studies test the intervention on this outcome${(f.studies||0)?'<br>'+sigtxt(f):' — <span style="color:#b3006b;font-weight:700">gap: never tested directly</span>'}`))+
+    row('What this means','An expected benefit via the exposure, not a measured effect of the intervention. Findings are associations, not causal estimates.')+
+    row('How these were made','LLM-extracted from peer-reviewed papers (PubMed, Europe PMC, OpenAlex), values checked against the source text. Matched to this intervention by our keyword rules rather than System’s biomedical concept labels.')+
     `<div class="metric"><b>Findings in the graph</b>${fl.length?'':'None in this view.'}</div><ul>${(uk()?fl.filter(f=>f.r==='UK'):fl).slice(0,12).map(f=>`<li><span class="tagk ${f.k==='exposure'?'e':''}">${f.k==='exposure'?'EXPOSURE':'ACTION TEST'}</span>${esc(f.a)} → ${esc(f.b)}<div><span class="st">${esc(f.st||'')} ${f.v!=null?esc(f.v):''}${f.lo!=null?` (${esc(f.lo)}–${esc(f.hi)})`:''}</span></div><div class="meta">${esc(f.c)}${f.r==='UK'?' · UK':''}${f.doi?` · <a href="https://doi.org/${esc(f.doi)}" target="_blank" rel="noopener">doi</a>`:''}</div></li>`).join('')}</ul>`;
     if(+p[1]!==8&&it.notes&&it.notes.length)html+=row('Reviews &amp; trials outside the graph',it.notes.map(esc).join('<br>'));}
   else if(p[0]==='cob'){const it=INTS[+p[1]],g=CB[+p[2]];
-    if(p[3]==='na')html=`<h4>${esc(it.name)} → ${esc(g.name)}</h4>`+row('Status','Not assessed: no evidence found for this action. A data gap worth funding.');
+    if(p[3]==='na')html=`<h4>${esc(it.name)} → ${esc(g.name)}</h4>`+row('Status','Not assessed: no evidence found for this intervention. A data gap worth funding.');
     else{const c=it.cob[+p[3]];html=`<h4>${esc(it.name)} → ${esc(g.name)}</h4>`+row('Direction',{benefit:'Possible benefit',mixed:'Mixed / conditional',harm:'Potential harm / trade-off'}[c.type]+' · '+c.w)+row('Evidence',esc(c.text))+row('Source',esc(c.src||'not quantified')+' · cited report, outside the System graph');}}
   el.innerHTML=html;
 }

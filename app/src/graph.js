@@ -47,7 +47,7 @@ function draw(){
   VIS.forEach(i=>INTS[i].cob.forEach((c,ci)=>{const s=isSel(i),a=top(P.int[i]),b=cobEnd(P.cob[c.g]);E+=curve(a[0],a[1],b[0],b[1],COL[c.type],s?1:.12,c.w==='W2'?4.5:2.5,DASH[c.type],rows,s?`cob:${i}:${c.g}:${ci}`:null);}));
   slots.forEach(i=>{const it=ITEM(i);HL.forEach((h,k)=>{const e=edgeP(it,h.key),v=e.studies;if(!v)return;const s=isSel(i)||(ONLY.length>1&&i===8);
     const a=bot(P.int[i]),b=hlEnd(P.hl[k]),c=cons(e.pct_sig);E+=curve(a[0],a[1],b[0],b[1],i===8?COL.harm:COL.health,s?1:.1,lw(v),c[0],rows,s?`hl:${i}:${k}`:null);
-    if(i===st.sel)B+=badge(a[0]+(b[0]-a[0])*.6,a[1]+(b[1]-a[1])*.6,e.pct_sig!=null&&v>=5?`${v} · ${e.pct_sig}% sig`:`${v}`);});});
+});});
   if(SHOWCR)CR.worsens.forEach(key=>{const t=INTS.findIndex(x=>x.key===key);if(!slots.includes(t))return;const a=P.int[8],b=P.int[t];
     E+=rows?`<path d="M${a.x+a.w/2} ${a.y} C${a.x+a.w/2} ${a.y-70} ${b.x+b.w/2} ${b.y-70} ${b.x+b.w/2} ${b.y}" fill="none" stroke="#ff43bd" stroke-width="2.5" stroke-dasharray="2 5"/>`:`<path d="M${a.x} ${a.y+30} C${a.x-46} ${a.y+30} ${b.x-46} ${b.y+30} ${b.x} ${b.y+30}" fill="none" stroke="#ff43bd" stroke-width="2.5" stroke-dasharray="2 5"/>`;});
   CB.forEach((g,j)=>{const p=P.cob[j],hit=have.has(j);N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(g.name)}</div><div class="gs">${g.n} of 8 actions have evidence</div><div class="gs2">${hit?'Evidence for the selected action':'Not assessed for the selected action'}</div>`,'cob'+(hit?' on':''));});
@@ -55,7 +55,7 @@ function draw(){
     const pS=uk()?{studies:it.exp_uk,pct_sig:null,level:P_(it).level}:P_(it), fS=uk()?{studies:it.direct_uk,pct_sig:null,level:F_(it).level}:F_(it);
     const body=`<div class="gt">${esc(it.name)}</div><div class="gs">${cr?'exposure only · makes damp &amp; stale air worse':'reduces '+esc(it.exposure)}</div>`+
       meter('Problem',pS,cr?'#ff43bd':'#36c9ff')+qbar(pS,maxP,cr?'#ff43bd':'#36c9ff',cr?'#ffb3e3':'#a6e6ff','problem')+
-      (cr?'':meter('Fix',fS,'#111')+qbar(fS,maxF,'#111','#9a9a9a','fix')+((it.notes&&it.notes.length)?`<div class="gx">+ outside review or trial</div>`:''));
+      (cr?'':meter('Fix',fS,'#111')+qbar(fS,maxF,'#111','#9a9a9a','fix'));
     N+=fo(p.x,p.y,p.w,p.h,body,'int'+(s?' sel':'')+(cr?' cr':''),cr?'':`data-kind="int" data-i="${i}" tabindex="0" role="button" aria-label="${esc(it.name)}"`);});
   HL.forEach((h,k)=>{const p=P.hl[k],v=hv(k);let e;if(fk.length===1)e=edgeP(sel,h.key);else{const sg=fk.reduce((a,i)=>{const x=edgeP(INTS[i],h.key);return a+(x.pct_sig!=null?Math.round((x.studies||0)*x.pct_sig/100):0);},0);e={studies:v,pct_sig:uk()||!v?null:Math.round(sg/v*100)};}const f=fk.reduce((a,i)=>a+(edgeF(INTS[i],h.key).studies||0),0);
     N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(h.name)}</div>`+(v?qbar(e,maxHv,'#36c9ff','#a6e6ff','problem'):'<div class="gs">No study found</div>')+`<div class="gs2">${f} fix ${f===1?'study':'studies'}</div>`,'hl'+(v?' on':''));});
