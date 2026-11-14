@@ -3,3 +3,8 @@ raw/
 *.duckdb.wal
 .env
 .DS_Store
+external/raw/
+external/raw2/
+external/raw3/
+*.zip
+*.rar
