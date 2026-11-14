@@ -1,5 +1,7 @@
 import json, sys
 G=json.load(open(sys.argv[1]))
+STR=json.load(open(sys.argv[3])) if len(sys.argv)>3 else {}
+NONE={'studies':0,'tested':0,'significant':0,'pct_sig':None,'trials':0,'level':'None'}
 nodes={n['id']:n for n in G['nodes']}; edges=G['edges']
 ORDER=[("Moisture & mould remediation","Moisture & mould remediation"),("Building fabric (insulation, airtightness)","Insulation & building fabric"),
 ("Ventilation & source capture","Ventilation & source capture"),("Particle filtration","Particle filtration"),("Clean cooking","Combustion source control"),
@@ -32,16 +34,17 @@ def health_for(g, has_int=True):
             if has_int:
                 iv=E.get(ekey("intervention",g,o))
                 if iv: direct+=iv['studies']; direct_uk+=iv['uk_studies']; fs=[slim(f,"intervention") for f in iv['findings'][:10]]+fs
-        out[hk]={"harm":harm,"harm_uk":harm_uk,"direct":direct,"direct_uk":direct_uk,"findings":fs[:14]}
+        ps=STR.get(g,{}).get("exposure",{}).get("by_outcome",{}).get(hk,NONE); fs_=STR.get(g,{}).get("intervention",{}).get("by_outcome",{}).get(hk,NONE)
+        out[hk]={"harm":harm,"harm_uk":harm_uk,"direct":direct,"direct_uk":direct_uk,"findings":fs[:14],"ps":ps,"fs":fs_}
     return out
 ints=[]
 for g,name in ORDER:
     ni=nodes[f"intervention:{g}"]; ne=nodes[f"exposure:{g}"]; h=health_for(g)
     ints.append({"key":g,"name":name,"exposure":EXPN[g],"harm_total":sum(v["harm"] for v in h.values()),"exp_studies":ne["studies"],"exp_uk":ne["uk_studies"],
-      "direct":ni["studies"],"direct_uk":ni["uk_studies"],"regions":ne["regions"],"settings":ne["settings"],"health":h,
+      "direct":ni["studies"],"direct_uk":ni["uk_studies"],"regions":ne["regions"],"settings":ne["settings"],"int_settings":ni["settings"],"strength":{"p":STR.get(g,{}).get("exposure",NONE),"f":STR.get(g,{}).get("intervention",NONE)},"health":h,
       "cob":[{"g":j,"type":t,"w":w,"text":tx,"src":s} for j,t,w,tx,s in CBH[g]],"notes":ni.get("certainty_notes",[]),"gaps":ni.get("data_gaps",[]),"sources":ni.get("source_ids",[])})
 nc=nodes["exposure:Crowding (exposure)"]; hc=health_for("Crowding (exposure)",False)
-crowd={"key":"Crowding","name":"Crowding","exposure":"crowding","harm_total":sum(v["harm"] for v in hc.values()),"exp_studies":nc["studies"],"exp_uk":nc["uk_studies"],"direct":0,"direct_uk":0,"regions":nc["regions"],"settings":nc["settings"],"health":hc,"worsens":["Moisture & mould remediation","Ventilation & source capture"]}
+crowd={"key":"Crowding","name":"Crowding","exposure":"crowding","harm_total":sum(v["harm"] for v in hc.values()),"exp_studies":nc["studies"],"exp_uk":nc["uk_studies"],"direct":0,"direct_uk":0,"strength":{"p":STR.get("Crowding (exposure)",{}).get("exposure",NONE),"f":NONE},"regions":nc["regions"],"settings":nc["settings"],"health":hc,"worsens":["Moisture & mould remediation","Ventilation & source capture"]}
 health=[{"key":hk,"name":hn,"total":sum(i["health"][hk]["harm"] for i in ints+[crowd]),"total_uk":sum(i["health"][hk]["harm_uk"] for i in ints+[crowd])} for hk,hn,_ in HO]
 cobg=[{"i":j,"name":n,"n":sum(1 for i in ints if any(c["g"]==j for c in i["cob"]))} for j,n in enumerate(COB)]
 DATA={"interventions":ints,"crowding":crowd,"health":health,"cob":cobg,
