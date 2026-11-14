@@ -1,0 +1,5 @@
+raw/
+*.duckdb
+*.duckdb.wal
+.env
+.DS_Store
