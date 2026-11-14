@@ -65,6 +65,19 @@ window.HP_cardBars=function(i,setting){var it=D[i];if(!it)return "";var key=(set
 rep('<script>\nconst data=[', pre+'<script>\nconst data=[')
 gjs=open('graph.js').read()
 rep('</script></body></html>', '</script>\n<script>'+gjs+'</script></body></html>')
+
+TXT=[('the exposure the action reduces','the exposure the intervention reduces'),('studies testing the action','studies testing the intervention'),
+ ('actions selected','interventions selected'),('Matched to this action','Matched to this intervention'),('of 8 actions have evidence','of 8 interventions have evidence'),
+ ('studies test the action on this outcome','studies test the intervention on this outcome'),('Overview · all actions','Overview · all interventions'),
+ ('explore actions together','explore interventions together'),('Choose an action','Choose an intervention'),('Compare possible actions','Compare possible interventions'),
+ ('for the selected action','for the selected intervention'),('no evidence found for this action','no evidence found for this intervention'),
+ ('Pick an action. Lines run to its wider outcomes (above)','Pick an intervention. Lines run to its co-benefits and costs (above)'),
+ ('Selected action','Selected intervention'),('measured effect of the action','measured effect of the intervention'),('compare all selected actions','compare all selected interventions'),
+ ('evidence for one action','evidence for one intervention'),('Action evidence graph','Intervention evidence graph'),('← All actions','← All interventions')]
+def fixtxt(s):
+    for x,y in TXT: s=s.replace(x,y)
+    return s
+h=fixtxt(h)
 out=sys.argv[1]; os.makedirs(out,exist_ok=True)
 open(os.path.join(out,'index.html'),'w').write(h)
 # ---- graph.html: one action or a package ----
@@ -82,5 +95,6 @@ else if(a.length>1){t.textContent='Package: '+n.join(' + ');document.title='Pack
  document.getElementById('pkg').innerHTML='<div class="pkgnote"><b>Package view.</b> Each line is evidence for one action. Combined effects and interactions have not been assessed; counts cannot be added to estimate a joint effect.</div>';}
 document.querySelector('#graph .eyebrow').textContent=a.length>1?'Package evidence graph · real data':'Action evidence graph · real data';})();</script>
 <script>'''+gjs+'''</script></body></html>'''
+g=fixtxt(g)
 open(os.path.join(out,'graph.html'),'w').write(g)
 print('ok', len(h), len(g))
