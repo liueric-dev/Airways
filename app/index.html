@@ -257,7 +257,7 @@ function inspect(id){
 }
 function pick(i){st.sel=i;st.edge=null;draw();}
 window.HP_selectAction=function(i){location.href='graph.html?a='+i;};window.HP_openPackage=function(arr){location.href='graph.html?a='+arr.join(',');};
-document.getElementById('gpick').innerHTML=(ONLY.length===1?[]:VIS).map(i=>`<button type="button" data-pick="${i}" aria-pressed="false">${esc(INTS[i].name)}</button>`).join('');
+document.getElementById('gpick').innerHTML=(ONLY.length?[]:VIS).map(i=>`<button type="button" data-pick="${i}" aria-pressed="false">${esc(INTS[i].name)}</button>`).join('');
 document.getElementById('gpick').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b)pick(+b.dataset.pick);});
 document.querySelectorAll('[data-layout]').forEach(b=>b.addEventListener('click',()=>{st.layout=b.dataset.layout;document.querySelectorAll('[data-layout]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();}));
 document.querySelectorAll('[data-region]').forEach(b=>b.addEventListener('click',()=>{st.region=b.dataset.region;document.querySelectorAll('[data-region]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();}));

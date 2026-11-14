@@ -59,7 +59,7 @@ function draw(){
     N+=fo(p.x,p.y,p.w,p.h,body,'int'+(s?' sel':'')+(cr?' cr':''),cr?'':`data-kind="int" data-i="${i}" tabindex="0" role="button" aria-label="${esc(it.name)}"`);});
   HL.forEach((h,k)=>{const p=P.hl[k],v=hv(k);let e;if(fk.length===1)e=edgeP(sel,h.key);else{const sg=fk.reduce((a,i)=>{const x=edgeP(INTS[i],h.key);return a+(x.pct_sig!=null?Math.round((x.studies||0)*x.pct_sig/100):0);},0);e={studies:v,pct_sig:uk()||!v?null:Math.round(sg/v*100)};}const f=fk.reduce((a,i)=>a+(edgeF(INTS[i],h.key).studies||0),0);
     N+=fo(p.x,p.y,p.w,p.h,`<div class="gt">${esc(h.name)}</div>`+(v?qbar(e,maxHv,'#36c9ff','#a6e6ff','problem'):'<div class="gs">No study found</div>')+`<div class="gs2">${f} fix ${f===1?'study':'studies'}</div>`,'hl'+(v?' on':''));});
-  const hd=rows?[[0,18,'WIDER OUTCOMES'],[0,316,'ACTIONS · and the exposure each reduces'],[0,P.hl[0].y-14,'HEALTH · line width = studies · line style = consistency']]:[[0,26,'WIDER OUTCOMES'],[500,26,'ACTIONS'],[1070,26,'HEALTH']];
+  const hd=rows?[[0,18,'CO-BENEFITS & COST'],[0,P.int[slots[0]].y-14,'INTERVENTIONS'],[0,P.hl[0].y-14,'HEALTH']]:[[0,26,'CO-BENEFITS & COST'],[500,26,'INTERVENTIONS'],[1070,26,'HEALTH']];
   const svg=document.getElementById('gsvg');svg.classList.toggle('multi',n>1);svg.setAttribute('viewBox',`-6 -6 ${W+12} ${Hh+12}`);svg.style.minWidth=Math.min(W,1000)+'px';
   svg.innerHTML=E+N+B+hd.map(h=>`<text x="${h[0]}" y="${h[1]}" font-size="13" font-weight="800" letter-spacing="1" fill="#111" stroke="#fff" stroke-width="5" paint-order="stroke" stroke-linejoin="round">${h[2]}</text>`).join('');
   document.querySelectorAll('#gpick button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.pick===st.sel)));
@@ -92,7 +92,7 @@ function inspect(id){
 }
 function pick(i){st.sel=i;st.edge=null;draw();}
 window.HP_selectAction=function(i){location.href='graph.html?a='+i;};window.HP_openPackage=function(arr){location.href='graph.html?a='+arr.join(',');};
-document.getElementById('gpick').innerHTML=(ONLY.length===1?[]:VIS).map(i=>`<button type="button" data-pick="${i}" aria-pressed="false">${esc(INTS[i].name)}</button>`).join('');
+document.getElementById('gpick').innerHTML=(ONLY.length?[]:VIS).map(i=>`<button type="button" data-pick="${i}" aria-pressed="false">${esc(INTS[i].name)}</button>`).join('');
 document.getElementById('gpick').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b)pick(+b.dataset.pick);});
 document.querySelectorAll('[data-layout]').forEach(b=>b.addEventListener('click',()=>{st.layout=b.dataset.layout;document.querySelectorAll('[data-layout]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();}));
 document.querySelectorAll('[data-region]').forEach(b=>b.addEventListener('click',()=>{st.region=b.dataset.region;document.querySelectorAll('[data-region]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw();}));
